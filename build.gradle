@@ -8,6 +8,8 @@ buildscript {
     }
 }
 
+apply plugin: 'maven'
+
 defaultTasks 'aar'
 
 import org.ajoberstar.grgit.*
@@ -17,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-task clean << {
+task cleanFBRepo << {
     delete project.buildDir
     delete FB_REPO_DIR
 }
@@ -69,3 +71,23 @@ task aar(type: GradleBuild, dependsOn: checkoutProjectTag) {
     tasks = ['build']
     startParameter.projectProperties = [ARCHIVE_PREFIX: project.ARCHIVE_PREFIX, FB_TAG: FB_TAG]
 }
+
+artifacts {  
+    archives file('build/outputs/aar/' + project.name + '-' +FB_TAG + '.aar') 
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://"+System.getProperty("user.home")+"/.m2/repository")
+            pom.version = FB_TAG
+            pom.artifactId = project.name
+            pom.groupId = 'com.facebook'
+            pom.packaging = 'aar'
+        }
+    }
+}
+
+clean.dependsOn('cleanFBRepo')
+
+uploadArchives.dependsOn('aar')
