@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.ajoberstar:grgit:0.2.3'
+    }
+}
+
+defaultTasks 'aar'
+
+import org.ajoberstar.grgit.*
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+task clean << {
+    delete project.buildDir
+    delete FB_REPO_DIR
+}
+
+def repo = null
+
+task cloneFBRepo << {
+    if (!file(project.FB_REPO_DIR).exists()){
+        repo = Grgit.clone(dir: new File(project.FB_REPO_DIR), uri: project.FB_GITHUB_URL)
+    }else{
+        repo = Grgit.open(project.FB_REPO_DIR)
+    }
+}
+
+task listTags(dependsOn: cloneFBRepo) << {
+    repo.tag.list().each { Tag tag -> 
+        println(tag.getName())
+    }
+}
+
+task checkoutProjectTag(dependsOn: cloneFBRepo) << {
+    boolean found = false
+    repo.tag.list().each { Tag tag -> 
+        if (tag.getName().equals(FB_TAG)){
+            found=true
+        }
+    }
+    if(!found){
+        throw new GradleException('''
+        FB_TAG is set to an invalid tag identifier.
+
+        Use -PFB_TAG=<tag> to set it from the command line
+
+        Run listTags to see the list of valid tag names
+''')
+    }else{
+
+
+    if (!repo.branch.getCurrent().getName().equals(FB_TAG)){
+        delete project.buildDir        
+        repo.checkout(branch:FB_TAG)
+    }
+    }
+    
+}
+
+task aar(type: GradleBuild, dependsOn: checkoutProjectTag) {
+    buildFile = 'fb_build.gradle'
+    tasks = ['build']
+    startParameter.projectProperties = [ARCHIVE_PREFIX: project.ARCHIVE_PREFIX, FB_TAG: FB_TAG]
+}

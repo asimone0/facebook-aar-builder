@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'org.ajoberstar:grgit:0.2.3'
+    }
+}
+
+import org.ajoberstar.grgit.*
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+apply plugin: 'android-library'
+
+group = 'com.facebook'
+archivesBaseName=ARCHIVE_PREFIX
+version = FB_TAG
+
+
+//  These dependencies should be identical to the facebook lib
+
+dependencies {
+    compile 'com.android.support:support-v4:20.0.+'
+    compile 'com.parse.bolts:bolts-android:1.1.2'
+}
+
+
+android {
+    
+    //  These version designations should match the facebook lib
+
+    compileSdkVersion 20
+    buildToolsVersion '20.0.0'
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 20
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    //  This sourceSet config will break if the facebook lib changes its configuration
+
+    sourceSets {
+        main {
+            manifest.srcFile project.FB_REPO_DIR + '/facebook/AndroidManifest.xml'
+            java.srcDirs = [project.FB_REPO_DIR + '/facebook/src']
+            res.srcDirs = [project.FB_REPO_DIR + '/facebook/res']
+        }
+    }
+}
