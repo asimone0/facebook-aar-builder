@@ -16,11 +16,11 @@ cd <wherever you put it>
 ```sh
 ./gradlew -PFB_TAG=<desired tag from facebook repo>
 ```
-**The resulting aar file will be in**  
+The resulting aar file will be in  
 *./build/outputs/aar*  
 
+**...but if you want the file in your maven local...**
 ```sh
-...but if you want the file in your maven local...
 ./gradlew -PFB_TAG=<desired tag from facebook repo> uploadArchives
 ```
 
