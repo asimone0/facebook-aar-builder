@@ -18,7 +18,11 @@ cd <wherever you put it>
 ```
 **The resulting aar file will be in**  
 *./build/outputs/aar*  
-...(but you probably really want to install it in your maven local)...
+
+```sh
+...but if you want the file in your maven local...
+./gradlew -PFB_TAG=<desired tag from facebook repo> uploadArchives
+```
 
 
 ####Too lazy to look up the tags?
