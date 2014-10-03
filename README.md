@@ -17,7 +17,8 @@ cd <wherever you put it>
 ./gradlew -PFB_TAG=<desired tag from facebook repo>
 ```
 **The resulting aar file will be in**  
-*./build/outputs/aar*
+*./build/outputs/aar*  
+...(but you probably really want to install it in your maven local)...
 
 
 ####Too lazy to look up the tags?
