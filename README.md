@@ -1,6 +1,3 @@
-facebook-aar-builder
-=========
-
 A script for assembling an aar file based on any tag in the [facebook-android-sdk](https://github.com/facebook/facebook-android-sdk) github repository.
 
 
