@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.ajoberstar:grgit:0.2.3'
+        classpath 'org.ajoberstar:grgit:1.0.0+'
     }
 }
 
@@ -35,14 +35,15 @@ task cloneFBRepo << {
 }
 
 task listTags(dependsOn: cloneFBRepo) << {
-    repo.tag.list().each { Tag tag -> 
+    repo.pull()
+    repo.tag.list().each { Tag tag ->
         println(tag.getName())
     }
 }
 
 task checkoutProjectTag(dependsOn: cloneFBRepo) << {
     boolean found = false
-    repo.tag.list().each { Tag tag -> 
+    repo.tag.list().each { Tag tag ->
         if (tag.getName().equals(FB_TAG)){
             found=true
         }
@@ -59,11 +60,11 @@ task checkoutProjectTag(dependsOn: cloneFBRepo) << {
 
 
     if (!repo.branch.getCurrent().getName().equals(FB_TAG)){
-        delete project.buildDir        
+        delete project.buildDir
         repo.checkout(branch:FB_TAG)
     }
     }
-    
+
 }
 
 task aar(type: GradleBuild, dependsOn: checkoutProjectTag) {
@@ -72,8 +73,8 @@ task aar(type: GradleBuild, dependsOn: checkoutProjectTag) {
     startParameter.projectProperties = [ARCHIVE_PREFIX: project.ARCHIVE_PREFIX, FB_TAG: FB_TAG]
 }
 
-artifacts {  
-    archives file('build/outputs/aar/' + project.name + '-' +FB_TAG + '.aar') 
+artifacts {
+    archives file('build/outputs/aar/' + project.name + '-' +FB_TAG + '.aar')
 }
 
 uploadArchives {
