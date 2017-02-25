@@ -7,7 +7,7 @@ A script for assembling an aar file based on any tag in the [facebook-android-sd
 ##Clone
 
 ```sh
-git clone https://github.com/tonestuff/facebook-aar-builder
+git clone https://github.com/asimone0/facebook-aar-builder
 cd <wherever you put it>
 ```
 
